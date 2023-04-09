@@ -4,6 +4,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\CreditTransactionController;
+use App\Http\Controllers\ItemController;
+use App\Http\Controllers\ItemTransactionController;
+use App\Http\Controllers\MeasurementController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -28,6 +32,24 @@ Route::group(['middleware'=>['auth:sanctum']],function(){
         Route::post('/account',[AccountController::class,'store']);
         Route::put('/account',[AccountController::class,'store']);
         Route::delete('/account/{id}',[AccountController::class,'destroy']);
+
+        // CREDIT
+        Route::get('/credit_transactions/{account_id}',[CreditTransactionController::class,'show']);
+        Route::post('/credit_transaction',[CreditTransactionController::class,'store']);
+
+        // ITEM
+        Route::get('/items',[ItemController::class,'index']);
+        Route::post('/item',[ItemController::class,'store']);
+        Route::put('/item',[ItemController::class,'store']);
+
+        // ITEM TRANSACTION
+        Route::get('/item_transactions/{account_id}',[ItemTransactionController::class,'show']);
+        Route::post('/item_transaction',[ItemTransactionController::class,'store']);
+
+        // BODY MEASUREMENT
+        Route::get('/measurements/{account_id}',[MeasurementController::class,'show']);
+        Route::post('/measurement',[MeasurementController::class,'store']);
+
 });
 // AUTHENTICATION
 Route::post('/auth/signin',[AuthController::class,'signin']);

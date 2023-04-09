@@ -93,4 +93,22 @@ class AccountController extends Controller
     {
         return Account::findOrFail($id)->delete();
     }
+
+    public static function insert_credit($transaction_type, $amount, $account_id) {
+        $operator = "+";
+        if ($transaction_type == 'Subtract') {
+            $operator = '-';
+        }
+    
+        $acc = Account::where('id', $account_id)->first();
+        $acc->credits = ($operator === '+') ? ($acc->credits + $amount) : ($acc->credits - $amount);
+    
+        try {
+            $acc->save();
+            return $acc->credits;
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+    
 }
