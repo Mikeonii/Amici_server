@@ -22,6 +22,8 @@ class CreateAccountsTable extends Migration
             $table->string('card_no');
             $table->integer('credits')->default(0);
             $table->string('rank')->default('Minotaur');
+            $table->date('gym_access_expiration_date')->nullable();
+            $table->date('membership_expiration_date')->nullable();
             $table->timestamps();
         });
     }

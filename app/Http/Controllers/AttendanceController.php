@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Attendance;
+use App\Models\Account;
 use Illuminate\Http\Request;
-
+use Carbon\Carbon;
+use App\Http\Controllers\AccountController;
 class AttendanceController extends Controller
 {
     /**
@@ -14,7 +16,8 @@ class AttendanceController extends Controller
      */
     public function index()
     {
-        //
+        $attendances = Attendance::with('account')->get();
+        return $attendances;
     }
 
     /**
@@ -33,10 +36,91 @@ class AttendanceController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store($card_no)
     {
-        //
+        $timeToday = Carbon::now()->format("H:i:s");
+        $dateToday = Carbon::now()->format("Y-m-d");
+        // return $timeToday;
+        // Check if attendance already exists in rows.
+        $account_id = $this->get_account_id($card_no);
+        if($account_id == false) return "Account not registered";
+    
+        $att = Attendance::where('account_id', $account_id)
+            ->whereDate('created_at', $dateToday)
+            ->with('account')
+            ->first();
+        
+        if(!$att){
+            $att = $this->create_attendance($timeToday,$account_id,$card_no);
+        }
+        else if(!$att->logged_out){
+            $att = $this->insert_logged_out($att,$timeToday);
+        }
+
+        $rows = $this->get_total_attendance($account_id);
+        AccountController::update_rank($account_id,$rows);
+
+        return $att;
     }
+
+    private static function get_total_hours($time_in, $time_out){
+        $time_in = Carbon::parse($time_in); // Convert time_in to Carbon instance
+        $time_out = Carbon::parse($time_out); // Convert time_out to Carbon instance
+    
+        $difference = $time_out->diffInMinutes($time_in); // Calculate difference in minutes
+    
+        $hours = floor($difference / 60); // Calculate total hours
+        $minutes = $difference % 60; // Calculate remaining minutes
+    
+        // Format the total hours and minutes as a string
+        $formatted_hours = ($hours == 1) ? $hours . ' hour' : $hours . ' hours';
+        $formatted_minutes = ($minutes == 1) ? $minutes . ' minute' : $minutes . ' minutes';
+    
+        // Build the final formatted string
+        $formatted_string = $formatted_hours . ' and ' . $formatted_minutes;
+    
+        return $formatted_string; // Return the formatted string
+    }
+
+
+    public function get_total_attendance($account_id){
+        $rows = Account::where('id',$account_id)->count();
+        return $rows;
+
+    }    
+
+    private  function create_attendance($timeToday, $account_id, $card_no){
+        $new = new Attendance;
+        $new->account_id = $account_id;
+        $new->logged_in = $timeToday;
+        $new->card_no = $card_no;
+        try {
+            $new->save();
+            $new = Attendance::where('id',$new->id)->with('account')->first();
+            return $new;
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    private  function insert_logged_out($att,$timeToday){
+        $att->logged_out = $timeToday;
+        $att->total_hours = $this->get_total_hours($att->logged_in,$att->logged_out);
+        try {
+            $att->save();
+            return $att;
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    public function get_account_id($card_no){
+        $account_id = Account::select('id')->where('card_no',$card_no)->first();
+        if(!$account_id) return false;
+        return $account_id->id;
+    }
+    
+    
 
     /**
      * Display the specified resource.

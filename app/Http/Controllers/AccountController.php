@@ -99,15 +99,43 @@ class AccountController extends Controller
         if ($transaction_type == 'Subtract') {
             $operator = '-';
         }
-    
         $acc = Account::where('id', $account_id)->first();
         $acc->credits = ($operator === '+') ? ($acc->credits + $amount) : ($acc->credits - $amount);
-    
         try {
             $acc->save();
             return $acc->credits;
         } catch (Exception $e) {
             return $e->getMessage();
+        }
+    }
+
+    public static function update_rank($account_id, $no_of_attendances){
+        $rank = "";
+        switch (true) {
+            case ($no_of_attendances >= 90):
+                $rank = "Pegasus";
+                break;
+            case ($no_of_attendances >= 150):
+                $rank = "Phoenix";
+                break;
+            case ($no_of_attendances >= 250):
+                $rank = "Dragon";
+                break;
+            case ($no_of_attendances >= 360):
+                $rank = "Cerberus";
+                break;
+            default:
+                $rank = "Minotaur";
+                break;
+        }
+    
+        $acc = Account::findOrFail($account_id);
+        $acc->rank = $rank;
+        try{
+            $acc->save();
+        }
+        catch(Exception $e){
+            return $acc->getMessage();
         }
     }
     

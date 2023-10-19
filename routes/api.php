@@ -8,6 +8,7 @@ use App\Http\Controllers\CreditTransactionController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ItemTransactionController;
 use App\Http\Controllers\MeasurementController;
+use App\Http\Controllers\AttendanceController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -49,6 +50,11 @@ Route::group(['middleware'=>['auth:sanctum']],function(){
         // BODY MEASUREMENT
         Route::get('/measurements/{account_id}',[MeasurementController::class,'show']);
         Route::post('/measurement',[MeasurementController::class,'store']);
+
+        // ATTENDANCE
+        Route::get('/attendances',[AttendanceController::class,'index']);
+        Route::post('/attendance/{card_no}',[AttendanceController::class,'store']);
+
 
 });
 // AUTHENTICATION

@@ -16,8 +16,10 @@ class CreateAttendancesTable extends Migration
         Schema::create('attendances', function (Blueprint $table) {
             $table->id();
             $table->integer('account_id');
-            $table->dateTime('logged_in');
-            $table->dateTime('logged_out');
+            $table->string('card_no');
+            $table->time('logged_in');
+            $table->time('logged_out')->nullable();
+            $table->string('total_hours')->nullable();
             $table->timestamps();
         });
     }
