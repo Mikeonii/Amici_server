@@ -6,6 +6,21 @@ use Illuminate\Http\Request;
 use App\Models\Account;
 class AccountController extends Controller
 {
+    public function print_waiver_form($account_id){
+        $acc = Account::where('id',$account_id)->first();
+        return view('forms/print_waiver_form')->with('acc',$acc);
+    }
+
+    public function get_top_gymmers(){
+        $topAttendees = Account::withCount('attendances as attendance_count') // Count the attendance records for each user
+        ->orderBy('attendance_count', 'desc') // Order by the correct alias, 'attendance_count', in descending order
+        ->limit(5) // Limit the results to the top 5
+        ->get();
+    return $topAttendees;
+
+    // $topAttendees will contain the top 5 users with the most attendances
+    
+    }
     /**
      * Display a listing of the resource.
      *
@@ -113,19 +128,19 @@ class AccountController extends Controller
         $rank = "";
         switch (true) {
             case ($no_of_attendances >= 90):
-                $rank = "Pegasus";
+                $rank = "Veteran";
                 break;
             case ($no_of_attendances >= 150):
-                $rank = "Phoenix";
+                $rank = "Master";
                 break;
             case ($no_of_attendances >= 250):
-                $rank = "Dragon";
+                $rank = "Legendary";
                 break;
-            case ($no_of_attendances >= 360):
-                $rank = "Cerberus";
+            case ($no_of_attendances >= 365):
+                $rank = "Beast";
                 break;
             default:
-                $rank = "Minotaur";
+                $rank = "Novice";
                 break;
         }
     

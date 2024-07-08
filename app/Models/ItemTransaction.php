@@ -12,4 +12,8 @@ class ItemTransaction extends Model
     public function item(){
         return $this->belongsTo(Item::class);
     }
+
+    public function account(){
+        return $this->belongsTo(Account::class);
+    }
 }

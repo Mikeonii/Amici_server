@@ -4,11 +4,49 @@ namespace App\Http\Controllers;
 
 use App\Models\Attendance;
 use App\Models\Account;
+use App\Models\ItemTransaction;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Http\Controllers\AccountController;
 class AttendanceController extends Controller
 {
+
+
+    public function get_yearly_attendances(){
+        // get the total sales in service,items,over all net,and expense for the last 12 months.
+        $months = collect(["January","Febuary","March","April","May","June","July","August","September","October","November","December"]);
+        $year = date('Y');
+        $summary = collect([[ "Year",
+        "Attendances",
+        ]]);   
+        foreach($months as $index=>$month){
+            $index+=1;
+           
+            $attendances = Attendance::whereMonth('created_at',$index)
+            ->whereYear('created_at',$year)
+            ->count();
+
+            $sum = collect([$month,intval($attendances)]);
+            $summary->push($sum);
+        }
+        return $summary;
+    }
+
+    public function is_expired($account_id){
+        $account = Account::findOrFail($account_id);
+        // Get the current date
+        $today = Carbon::now();
+        // Convert expiry_date to a Carbon object for comparison
+        $expiry_date = Carbon::parse($account->expiry_date);
+        // Check if the account's expiry_date is today or less than today
+        if ($expiry_date->lessThanOrEqualTo($today)) {
+            return true; // Account is expired
+        } else {
+            return false; // Account is not expired
+        }
+    }
+    
+    
     /**
      * Display a listing of the resource.
      *
@@ -16,7 +54,8 @@ class AttendanceController extends Controller
      */
     public function index()
     {
-        $attendances = Attendance::with('account')->get();
+        $attendances = Attendance::with('account')->orderBy('created_at', 'DESC')->get();
+
         return $attendances;
     }
 
@@ -37,24 +76,32 @@ class AttendanceController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store($card_no)
-    {
-        $timeToday = Carbon::now()->format("H:i:s");
+    {   
+     
+        $timeToday = Carbon::now();
         $dateToday = Carbon::now()->format("Y-m-d");
-        // return $timeToday;
-        // Check if attendance already exists in rows.
+       
         $account_id = $this->get_account_id($card_no);
-        if($account_id == false) return "Account not registered";
-    
+        if(!$account_id) return "Account not found";
+        //check first if account is expired or not
+        if($this->is_expired($account_id) == true) return "Account Expired";
         $att = Attendance::where('account_id', $account_id)
             ->whereDate('created_at', $dateToday)
             ->with('account')
             ->first();
         
+        // if no attendance
         if(!$att){
             $att = $this->create_attendance($timeToday,$account_id,$card_no);
         }
-        else if(!$att->logged_out){
+        // if exists and there's no log out,
+        else if($att->logged_out == "N/A"){
             $att = $this->insert_logged_out($att,$timeToday);
+            return collect([$att,"Thank you for choosing JC Fitness Gym. Hope you had a good time!"]);
+        }
+         // Check if attendance already exists in rows.
+        else if($att->logged_in && $att->logged_out){
+            return "Account already logged in";
         }
 
         $rows = $this->get_total_attendance($account_id);

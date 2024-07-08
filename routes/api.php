@@ -9,6 +9,8 @@ use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ItemTransactionController;
 use App\Http\Controllers\MeasurementController;
 use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\SummaryController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -42,11 +44,12 @@ Route::group(['middleware'=>['auth:sanctum']],function(){
         Route::get('/items',[ItemController::class,'index']);
         Route::post('/item',[ItemController::class,'store']);
         Route::put('/item',[ItemController::class,'store']);
+        Route::get('/get_yearly_sales',[ItemTransactionController::class,'get_yearly_sales']);
 
         // ITEM TRANSACTION
         Route::get('/item_transactions/{account_id}',[ItemTransactionController::class,'show']);
         Route::post('/item_transaction',[ItemTransactionController::class,'store']);
-
+        
         // BODY MEASUREMENT
         Route::get('/measurements/{account_id}',[MeasurementController::class,'show']);
         Route::post('/measurement',[MeasurementController::class,'store']);
@@ -54,8 +57,14 @@ Route::group(['middleware'=>['auth:sanctum']],function(){
         // ATTENDANCE
         Route::get('/attendances',[AttendanceController::class,'index']);
         Route::post('/attendance/{card_no}',[AttendanceController::class,'store']);
+        Route::get('/get_yearly_attendances',[AttendanceController::class,'get_yearly_attendances']);
+        Route::get('/top_gymmers',[AccountController::class,'get_top_gymmers']);
 
+       
 
 });
 // AUTHENTICATION
 Route::post('/auth/signin',[AuthController::class,'signin']);
+
+ // SUMMARY
+ Route::get('/get_attendance_summary',[SummaryController::class,'get_attendance_summary']);
