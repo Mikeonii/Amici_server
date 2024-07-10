@@ -33,6 +33,7 @@ Route::group(['middleware'=>['auth:sanctum']],function(){
         // ACCOUNT
         Route::get('/accounts',[AccountController::class,'index']);
         Route::post('/account',[AccountController::class,'store']);
+        Route::post('/upload_profile_picture',[AccountController::class,'upload_profile_picture']);
         Route::put('/account',[AccountController::class,'store']);
         Route::delete('/account/{id}',[AccountController::class,'destroy']);
 
@@ -49,6 +50,7 @@ Route::group(['middleware'=>['auth:sanctum']],function(){
         // ITEM TRANSACTION
         Route::get('/item_transactions/{account_id}',[ItemTransactionController::class,'show']);
         Route::post('/item_transaction',[ItemTransactionController::class,'store']);
+        Route::get('/get_all_item_transactions',[ItemTransactionController::class,'get_all_item_transactions']);
         
         // BODY MEASUREMENT
         Route::get('/measurements/{account_id}',[MeasurementController::class,'show']);
@@ -60,11 +62,12 @@ Route::group(['middleware'=>['auth:sanctum']],function(){
         Route::get('/get_yearly_attendances',[AttendanceController::class,'get_yearly_attendances']);
         Route::get('/top_gymmers',[AccountController::class,'get_top_gymmers']);
 
-       
+        // SUMMARY
+        Route::get('/get_attendance_summary',[SummaryController::class,'get_attendance_summary']); 
+        Route::get('/get_sales_summary',[SummaryController::class,'get_sales_summary']);
 
 });
 // AUTHENTICATION
 Route::post('/auth/signin',[AuthController::class,'signin']);
 
- // SUMMARY
- Route::get('/get_attendance_summary',[SummaryController::class,'get_attendance_summary']);
+

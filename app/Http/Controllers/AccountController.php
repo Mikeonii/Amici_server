@@ -4,8 +4,33 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Account;
+use App\Models\Measurement;
 class AccountController extends Controller
-{
+{   
+    public function upload_body_improvement_picture(Request $request){
+    //get the value of id
+    $measurement = Measurement::where($request->input('id'));
+    $measurement->photo_url = $request->input('body_improvement_picture_url');
+    try{
+        $measurement->save();
+        return $measurement;
+    }
+    catch(Exception $e){
+        return $e->getMessage();
+    }
+}
+    public function upload_profile_picture(Request $request){
+          //get the value of id
+          $account = Account::find($request->input('id'));
+          $account->profile_picture_url = $request->input('profile_picture_url');
+          try{
+              $account->save();
+              return $account;
+          }
+          catch(Exception $e){
+              return $e->getMessage();
+          }
+    }
     public function print_waiver_form($account_id){
         $acc = Account::where('id',$account_id)->first();
         return view('forms/print_waiver_form')->with('acc',$acc);
@@ -14,7 +39,7 @@ class AccountController extends Controller
     public function get_top_gymmers(){
         $topAttendees = Account::withCount('attendances as attendance_count') // Count the attendance records for each user
         ->orderBy('attendance_count', 'desc') // Order by the correct alias, 'attendance_count', in descending order
-        ->limit(5) // Limit the results to the top 5
+        ->limit(10) // Limit the results to the top 5
         ->get();
     return $topAttendees;
 

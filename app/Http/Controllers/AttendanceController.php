@@ -10,7 +10,16 @@ use Carbon\Carbon;
 use App\Http\Controllers\AccountController;
 class AttendanceController extends Controller
 {
-
+    
+    public function get_total_gym_time($time_in,$time_out){
+        $time_in = Carbon::parse($time_in); // Convert time_in to Carbon instance
+        $time_out = Carbon::parse($time_out); // Convert time_out to Carbon instance
+    
+        $difference = $time_out->diffInMinutes($time_in); // Calculate difference in minutes
+    
+        // $minutes = $difference % 60; //calculate minutes
+        return $difference;
+    }
 
     public function get_yearly_attendances(){
         // get the total sales in service,items,over all net,and expense for the last 12 months.
@@ -104,8 +113,7 @@ class AttendanceController extends Controller
             return "Account already logged in";
         }
 
-        $rows = $this->get_total_attendance($account_id);
-        AccountController::update_rank($account_id,$rows);
+      
 
         return $att;
     }
@@ -150,9 +158,28 @@ class AttendanceController extends Controller
         }
     }
 
+    private function update_total_hours($account_id,$total_minutes){
+        $acc = Account::findOrFail($account_id);
+        $acc->total_gym_time+=$total_minutes;
+        $acc->total_attendance_rows+=1;
+        try{
+            $acc->save();
+        }
+        catch(Exception $e){
+            return $e->getMessage();
+        }
+    }
+
     private  function insert_logged_out($att,$timeToday){
         $att->logged_out = $timeToday;
         $att->total_hours = $this->get_total_hours($att->logged_in,$att->logged_out);
+        // insert total gym hours
+        $total_minutes = $this->get_total_gym_time($att->logged_in,$att->logged_out);
+        // update account total hour
+        $this->update_total_hours($att->account_id,$total_minutes);
+
+        $rows = $this->get_total_attendance($att->account_id);
+        AccountController::update_rank($att->account_id,$rows);
         try {
             $att->save();
             return $att;

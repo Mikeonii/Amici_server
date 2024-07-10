@@ -8,7 +8,11 @@ use App\Http\Controllers\CreditTransactionController;
 use App\Models\Account;
 use Carbon\Carbon;
 class ItemTransactionController extends Controller
-{
+{   
+    public function get_all_item_transactions(){
+        $item_transactions = ItemTransaction::with('item','account')->orderBy('created_at','DESC')->get();
+        return $item_transactions;
+    }
     public function get_yearly_sales(){
         // get the total sales in service,items,over all net,and expense for the last 12 months.
         $months = collect(["January","Febuary","March","April","May","June","July","August","September","October","November","December"]);
