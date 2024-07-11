@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Account;
 use App\Models\Measurement;
+use App\Models\Attendance;
 class AccountController extends Controller
 {   
     public function upload_body_improvement_picture(Request $request){
@@ -133,6 +134,8 @@ class AccountController extends Controller
      */
     public function destroy($id)
     {
+        // delete all attendances
+        $atts = Attendance::where('account_id',$id)->delete();
         return Account::findOrFail($id)->delete();
     }
 
