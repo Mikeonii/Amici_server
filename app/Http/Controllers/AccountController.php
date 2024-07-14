@@ -6,8 +6,52 @@ use Illuminate\Http\Request;
 use App\Models\Account;
 use App\Models\Measurement;
 use App\Models\Attendance;
+use Carbon\Carbon;
 class AccountController extends Controller
 {   
+    public function modify_expiry_dates(Request $request){
+       $acc = Account::findOrFail($request->id);
+       $monthly_expiry = Carbon::parse($acc->expiry_date);
+       $yearly_expiry = Carbon::parse($acc->yearly_expiry_date);
+       if($request->column == 'Monthly Expiration'){
+            if($request->time_intervals == 'Days')
+            {
+                $acc->expiry_date = $monthly_expiry->addDays($request->count);
+            }
+            else if($request->time_intervals == 'Weeks'){
+                $acc->expiry_date = $monthly_expiry->addWeeks($request->count);
+            }
+            else if($request->time_intervals == 'Months'){
+                $acc->expiry_date = $monthly_expiry->addMonths($request->count);
+            }
+            else if($request->time_intervals == 'Years'){
+                $acc->expiry_date = $monthly_expiry->addYears($request->count);
+            }
+            
+       }
+       else if($request->column == "Yearly Expiration"){
+        if($request->time_intervals == 'Days')
+        {
+            $acc->yearly_expiry_date = $yearly_expiry->addDay($request->count);
+        }
+        else if($request->time_intervals == 'Weeks'){
+            $acc->yearly_expiry_date = $yearly_expiry->addWeek($request->count);
+        }
+        else if($request->time_intervals == 'Months'){
+            $acc->yearly_expiry_date = $yearly_expiry->addMonth($request->count);
+        }
+        else if($request->time_intervals == 'Years'){
+            $acc->yearly_expiry_date = $yearly_expiry->addYear($request->count);
+        }
+       }
+       try{
+            $acc->save();
+            return $acc;
+       }
+       catch(Exception $e){
+            return $e->getMessage();
+       }
+    }
     public function upload_body_improvement_picture(Request $request){
     //get the value of id
     $measurement = Measurement::where($request->input('id'));
