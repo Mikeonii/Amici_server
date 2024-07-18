@@ -125,8 +125,12 @@ class AccountController extends Controller
         $new->gender = $request->input('gender');
         $new->card_no = $request->input('card_no');
         $new->address = strtoupper($request->input('address'));
-        $new->total_gym_time =0;
-        $new->total_attendance_rows = 0;
+        $new->phone_number = $request->input('phone_number');
+        if($request->isMethod('post')){
+            $new->total_gym_time = 0;
+            $new->total_attendance_rows = 0;
+        }
+
         try{
             $new->save();
             $new = Account::find($new->id);
