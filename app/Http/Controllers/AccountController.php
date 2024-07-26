@@ -9,41 +9,31 @@ use App\Models\Attendance;
 use Carbon\Carbon;
 class AccountController extends Controller
 {   
+    public function adjustDate($date, $operation, $intervalType, $count) {
+        switch ($intervalType) {
+            case 'Days':
+                return $operation == 'add' ? $date->addDays($count) : $date->subDays($count);
+            case 'Weeks':
+                return $operation == 'add' ? $date->addWeeks($count) : $date->subWeeks($count);
+            case 'Months':
+                return $operation == 'add' ? $date->addMonths($count) : $date->subMonths($count);
+            case 'Years':
+                return $operation == 'add' ? $date->addYears($count) : $date->subYears($count);
+            default:
+                throw new InvalidArgumentException("Invalid time interval: $intervalType");
+        }
+    }
     public function modify_expiry_dates(Request $request){
        $acc = Account::findOrFail($request->id);
        $monthly_expiry = Carbon::parse($acc->expiry_date);
        $yearly_expiry = Carbon::parse($acc->yearly_expiry_date);
-       if($request->column == 'Monthly Expiration'){
-            if($request->time_intervals == 'Days')
-            {
-                $acc->expiry_date = $monthly_expiry->addDays($request->count);
-            }
-            else if($request->time_intervals == 'Weeks'){
-                $acc->expiry_date = $monthly_expiry->addWeeks($request->count);
-            }
-            else if($request->time_intervals == 'Months'){
-                $acc->expiry_date = $monthly_expiry->addMonths($request->count);
-            }
-            else if($request->time_intervals == 'Years'){
-                $acc->expiry_date = $monthly_expiry->addYears($request->count);
-            }
-            
-       }
-       else if($request->column == "Yearly Expiration"){
-        if($request->time_intervals == 'Days')
-        {
-            $acc->yearly_expiry_date = $yearly_expiry->addDay($request->count);
+    
+       if ($request->column == 'Monthly Expiration') {
+        $acc->expiry_date = $this->adjustDate($monthly_expiry, $request->operation, $request->time_intervals, $request->count);
+        } else if ($request->column == 'Yearly Expiration') {
+            $acc->yearly_expiry_date = $this->adjustDate($yearly_expiry, $request->operation, $request->time_intervals, $request->count);
         }
-        else if($request->time_intervals == 'Weeks'){
-            $acc->yearly_expiry_date = $yearly_expiry->addWeek($request->count);
-        }
-        else if($request->time_intervals == 'Months'){
-            $acc->yearly_expiry_date = $yearly_expiry->addMonth($request->count);
-        }
-        else if($request->time_intervals == 'Years'){
-            $acc->yearly_expiry_date = $yearly_expiry->addYear($request->count);
-        }
-       }
+        
        try{
             $acc->save();
             return $acc;
@@ -127,7 +117,7 @@ class AccountController extends Controller
         $new->gender = $request->input('gender');
         $new->card_no = $request->input('card_no');
         $new->address = strtoupper($request->input('address'));
-        $new->expiry_date = $dateToday;
+        if($request->isMethod('put')) $new->expiry_date = $dateToday;
         $new->phone_number = $request->phone_number;
         $new->yearly_expiry_date = $dateToday;
         $new->total_gym_time =0;
