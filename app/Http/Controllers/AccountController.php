@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Account;
 use App\Models\Measurement;
 use App\Models\Attendance;
+use Carbon\Carbon;
 class AccountController extends Controller
 {   
     public function upload_body_improvement_picture(Request $request){
@@ -75,12 +76,17 @@ class AccountController extends Controller
      */
     public function store(Request $request)
     {
+
+        $dateToday = Carbon::now()->format("Y-m-d");
         $new = $request->isMethod('put') ? Account::findOrFail($request->id) : new Account;
         $new->name = strtoupper($request->input('name'));
         $new->birth_date = $request->input('birth_date');
         $new->gender = $request->input('gender');
         $new->card_no = $request->input('card_no');
         $new->address = strtoupper($request->input('address'));
+        $new->expiry_date = $dateToday;
+        $new->phone_number = $request->phone_number;
+        $new->yearly_expiry_date = $dateToday;
         $new->total_gym_time =0;
         $new->total_attendance_rows = 0;
         try{
