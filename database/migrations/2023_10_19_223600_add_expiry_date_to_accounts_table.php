@@ -15,7 +15,7 @@ class AddExpiryDateToAccountsTable extends Migration
     {
         Schema::table('accounts', function (Blueprint $table) {
             $table->date("expiry_date")->default(Carbon::now());
-            $table->date("yearly_expiry_date")->default(Carbon::now());
+            $table->date("yearly_expiry_date")->nullable();
         });
     }
 
