@@ -36,7 +36,7 @@ Route::group(['middleware'=>['auth:sanctum']],function(){
         Route::post('/upload_profile_picture',[AccountController::class,'upload_profile_picture']);
         Route::put('/account',[AccountController::class,'store']);
         Route::delete('/account/{id}',[AccountController::class,'destroy']);
-
+        Route::put('/modify_expiry_dates',[AccountController::class,'modify_expiry_dates']);
         // CREDIT
         Route::get('/credit_transactions/{account_id}',[CreditTransactionController::class,'show']);
         Route::post('/credit_transaction',[CreditTransactionController::class,'store']);

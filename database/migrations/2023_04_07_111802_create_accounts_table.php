@@ -21,7 +21,7 @@ class CreateAccountsTable extends Migration
             $table->string('gender');
             $table->string('card_no');
             $table->integer('credits')->default(0);
-            $table->string('rank')->default('Minotaur');
+            $table->string('rank')->default('Novice');
             $table->timestamps();
         });
     }
