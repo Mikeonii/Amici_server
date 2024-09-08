@@ -10,6 +10,7 @@ use App\Http\Controllers\ItemTransactionController;
 use App\Http\Controllers\MeasurementController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\SummaryController;
+use App\Http\Controllers\SessionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -66,6 +67,10 @@ Route::group(['middleware'=>['auth:sanctum']],function(){
         Route::get('/get_attendance_summary',[SummaryController::class,'get_attendance_summary']); 
         Route::get('/get_sales_summary',[SummaryController::class,'get_sales_summary']);
 
+        // SESSION
+        Route::get('/sessions',[SessionController::class,'index']);
+        Route::post('/session',[SessionController::class,'store']);
+        
 });
 // AUTHENTICATION
 Route::post('/auth/signin',[AuthController::class,'signin']);
