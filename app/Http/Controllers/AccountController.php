@@ -119,7 +119,7 @@ class AccountController extends Controller
         $new->address = strtoupper($request->input('address'));
         if($request->isMethod('put')) $new->expiry_date = $dateToday;
         $new->phone_number = $request->phone_number;
-        $new->yearly_expiry_date = $dateToday;
+        $new->yearly_expiry_date = Carbon::now()->addYears(1);
         $new->total_gym_time =0;
         $new->total_attendance_rows = 0;
         $new->phone_number = $request->input('phone_number');
@@ -228,5 +228,21 @@ class AccountController extends Controller
             return $acc->getMessage();
         }
     }
+
+    public function addYear() {
+        $accounts = Account::get();
+        foreach ($accounts as $account) {
+            try {
+                // Ensure yearly_expiry_date is properly parsed to a Carbon instance
+                $yearly = Carbon::parse($account->yearly_expiry_date);
+                $account->yearly_expiry_date = $yearly->addYear();
+                $account->save();
+            } catch (Exception $e) {
+                return $e->getMessage();
+            }
+        }
+        return "added 1 year";
+    }
     
 }
+

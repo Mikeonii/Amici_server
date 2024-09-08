@@ -71,3 +71,5 @@ Route::group(['middleware'=>['auth:sanctum']],function(){
 Route::post('/auth/signin',[AuthController::class,'signin']);
 
 
+// add 1 year to all
+Route::get('/add',[AccountController::class,'addYear']);
