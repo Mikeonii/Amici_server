@@ -26,5 +26,6 @@ class AppServiceProvider extends ServiceProvider
     {
           // Set default timezone for all Carbon instances
         Carbon::setLocale(config('app.timezone'));
+        
     }
 }

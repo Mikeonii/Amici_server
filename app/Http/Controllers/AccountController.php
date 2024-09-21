@@ -74,12 +74,32 @@ class AccountController extends Controller
     public function get_top_gymmers(){
         $topAttendees = Account::withCount('attendances as attendance_count') // Count the attendance records for each user
         ->orderBy('attendance_count', 'desc') // Order by the correct alias, 'attendance_count', in descending order
-        ->limit(10) // Limit the results to the top 5
         ->get();
     return $topAttendees;
 
     // $topAttendees will contain the top 5 users with the most attendances
     
+    }
+    public function get_top_gymmer_of_current_month() {
+        $currentMonth = Carbon::now()->month; // Get current month
+        $currentYear = Carbon::now()->year; // Get current year
+
+        // Fetch the top gymmer of the current month
+        $topGymmer = Account::whereHas('attendances', function ($query) use ($currentMonth, $currentYear) {
+            // Filter attendances for the current month and year
+            $query->whereMonth('created_at', $currentMonth)
+                  ->whereYear('created_at', $currentYear);
+        })
+        ->withCount(['attendances' => function ($query) use ($currentMonth, $currentYear) {
+            // Count attendances for the current month and year
+            $query->whereMonth('created_at', $currentMonth)
+                  ->whereYear('created_at', $currentYear);
+        }])
+        ->orderBy('attendances_count', 'desc') // Order by attendance count
+        ->limit(10)
+        ->get(); // Get the top gymmer
+    
+        return $topGymmer;
     }
     /**
      * Display a listing of the resource.

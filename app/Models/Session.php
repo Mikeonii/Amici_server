@@ -10,6 +10,6 @@ class Session extends Model
     use HasFactory;
     public function getCreatedAtAttribute($value)
     {
-        return Carbon::parse($value)->format('F j, Y');
+        return Carbon::parse($value)->setTimezone(config('app.timezone'))->format('F j, Y g:i A');
     }
 }
