@@ -222,6 +222,9 @@ class AccountController extends Controller
     public static function update_rank($account_id, $no_of_attendances){
         $rank = "";
         switch (true) {
+            case ($no_of_attendances >= 60):
+                $rank = "Lifter";
+                break;
             case ($no_of_attendances >= 90):
                 $rank = "Veteran";
                 break;
