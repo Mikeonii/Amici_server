@@ -139,7 +139,7 @@ class AttendanceController extends Controller
 
 
     public function get_total_attendance($account_id){
-        $rows = Account::where('id',$account_id)->count();
+        $rows = Attendance::where('account_id',$account_id)->count();
         return $rows;
 
     }    

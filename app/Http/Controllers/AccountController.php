@@ -82,6 +82,7 @@ class AccountController extends Controller
     }
     public function get_top_gymmer_of_current_month() {
         $currentMonth = Carbon::now()->month; // Get current month
+        // $currentMonth = 10;
         $currentYear = Carbon::now()->year; // Get current year
         // Fetch the top gymmer of the current month
         $topGymmer = Account::whereHas('attendances', function ($query) use ($currentMonth, $currentYear) {

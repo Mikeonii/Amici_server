@@ -62,8 +62,7 @@ Route::group(['middleware'=>['auth:sanctum']],function(){
         Route::post('/attendance/{card_no}',[AttendanceController::class,'store']);
         Route::get('/get_yearly_attendances',[AttendanceController::class,'get_yearly_attendances']);
         Route::get('/top_gymmers',[AccountController::class,'get_top_gymmers']);
-        Route::get('/get_top_gymmer_of_current_month',[AccountController::class,'get_top_gymmer_of_current_month']);
-        Route::get('/get_top_gymmer_of_current_month',[AccountController::class,'get_top_gymmer_of_current_month']);
+
         
         // SUMMARY
         Route::get('/get_attendance_summary',[SummaryController::class,'get_attendance_summary']); 
@@ -76,6 +75,8 @@ Route::group(['middleware'=>['auth:sanctum']],function(){
 });
 // AUTHENTICATION
 Route::post('/auth/signin',[AuthController::class,'signin']);
+
+Route::get('/get_top_gymmer_of_current_month',[AccountController::class,'get_top_gymmer_of_current_month']);
 
 
 
