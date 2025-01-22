@@ -80,7 +80,7 @@ Route::group(['middleware'=>['auth:sanctum']],function(){
 });
 // AUTHENTICATION
 Route::post('/auth/signin',[AuthController::class,'signin']);
-Route::get('/get_top_gymmer_of_current_month',[AccountController::class,'get_top_gymmer_of_current_month']);
+Route::get('/get_top_gymmer_of_the_month/{month}/{year}',[AccountController::class,'get_top_gymmer_of_the_month']);
 
 Route::get('/get_top_gymmer_of_current_month',[AccountController::class,'get_top_gymmer_of_current_month']);
 

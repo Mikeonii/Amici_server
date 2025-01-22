@@ -85,15 +85,15 @@ class AccountController extends Controller
         // $currentMonth = 10;
         $currentYear = Carbon::now()->year; // Get current year
         // Fetch the top gymmer of the current month
-        $topGymmer = Account::whereHas('attendances', function ($query) use ($currentMonth, $currentYear) {
+        $topGymmer = Account::whereHas('attendances', function ($query) use ($month, $year) {
             // Filter attendances for the current month and year
-            $query->whereMonth('created_at', $currentMonth)
-                  ->whereYear('created_at', $currentYear);
+            $query->whereMonth('created_at', $month)
+                  ->whereYear('created_at', $year);
         })
-        ->withCount(['attendances' => function ($query) use ($currentMonth, $currentYear) {
+        ->withCount(['attendances' => function ($query) use ($month, $year) {
             // Count attendances for the current month and year
-            $query->whereMonth('created_at', $currentMonth)
-                  ->whereYear('created_at', $currentYear);
+            $query->whereMonth('created_at', $month)
+                  ->whereYear('created_at', $year);
         }])
         ->orderBy('attendances_count', 'desc') // Order by attendance count
         ->orderBy('total_gym_time','desc')
