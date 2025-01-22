@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\SummaryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,5 +18,5 @@ use App\Http\Controllers\AccountController;
 Route::get('/', function () {
     return view('welcome');
 });
-
+Route::get('/print_monthly_sales/{selectedMonth}/{selectedYear}',[SummaryController::class,'print_monthly_sales']);
 Route::get('/print_waiver_form/{account_id}',[AccountController::class,'print_waiver_form']);

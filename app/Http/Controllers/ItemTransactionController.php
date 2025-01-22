@@ -13,6 +13,16 @@ class ItemTransactionController extends Controller
         $item_transactions = ItemTransaction::with('item','account')->orderBy('created_at','DESC')->get();
         return $item_transactions;
     }
+
+    public function get_daily_sales($day,$month,$year){
+        $sales = ItemTransaction::with('item','account')
+        ->whereDate('created_at',$day)
+        ->whereMonth('created_at',$month)
+        ->whereYear('created_at',$year)
+        ->orderBy('created_at','DESC')
+        ->get();
+        return $sales;
+    }
     public function get_yearly_sales(){
         // get the total sales in service,items,over all net,and expense for the last 12 months.
         $months = collect(["January","Febuary","March","April","May","June","July","August","September","October","November","December"]);

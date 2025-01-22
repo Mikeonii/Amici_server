@@ -72,7 +72,7 @@ Route::group(['middleware'=>['auth:sanctum']],function(){
         // SUMMARY
         Route::get('/get_attendance_summary',[SummaryController::class,'get_attendance_summary']); 
         Route::get('/get_sales_summary',[SummaryController::class,'get_sales_summary']);
-
+       
         // SESSION
         Route::get('/sessions',[SessionController::class,'index']);
         Route::post('/session',[SessionController::class,'store']);

@@ -5,10 +5,25 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Attendance;
 use App\Models\ItemTransaction;
+use App\Models\Session;
 use Carbon\Carbon;
 
 class SummaryController extends Controller
 {   
+    public function print_monthly_sales($month,$year){
+
+        // Ensure the month has 2 digits (e.g., 09 instead of 9)
+        $month = str_pad($month, 2, '0', STR_PAD_LEFT);
+        // Create the date with 'm-Y' format
+        $date = Carbon::createFromFormat('m-Y', $month . '-' . $year)->format('F, Y');
+        $sales = ItemTransaction::whereMonth('created_at',$month)->whereYear('created_at',$year)
+        ->with('account')->with('item')->get();
+
+        $walk_in_sales = Session::whereMonth('created_at',$month)->whereYear('created_at',$year)->get();
+        
+        return view('/forms/print_monthly_sales')->with('sales',$sales)->with('date',$date)->with('walk_in_sales',$walk_in_sales);
+    }
+
     public function get_sales_summary(){
         $months = collect(["January","Febuary","March","April","May","June","July","August","September","October","November","December"]);
         $year = date('Y');
