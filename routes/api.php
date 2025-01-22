@@ -41,7 +41,8 @@ Route::group(['middleware'=>['auth:sanctum']],function(){
         // CREDIT
         Route::get('/credit_transactions/{account_id}',[CreditTransactionController::class,'show']);
         Route::post('/credit_transaction',[CreditTransactionController::class,'store']);
-
+        Route::get('/get_top_gymmer_of_the_month/{month}/{year}',[AccountController::class,'get_top_gymmer_of_the_month']);
+        
         // ITEM
         Route::get('/items',[ItemController::class,'index']);
         Route::post('/item',[ItemController::class,'store']);
@@ -62,13 +63,9 @@ Route::group(['middleware'=>['auth:sanctum']],function(){
         Route::post('/attendance/{card_no}',[AttendanceController::class,'store']);
         Route::get('/get_yearly_attendances',[AttendanceController::class,'get_yearly_attendances']);
         Route::get('/top_gymmers',[AccountController::class,'get_top_gymmers']);
-<<<<<<< HEAD
 
-        
-=======
         Route::get('/get_top_gymmer_of_current_month',[AccountController::class,'get_top_gymmer_of_current_month']);
-        Route::get('/get_top_gymmer_of_current_month',[AccountController::class,'get_top_gymmer_of_current_month']);
->>>>>>> 7df01b2 (stash)
+
         // SUMMARY
         Route::get('/get_attendance_summary',[SummaryController::class,'get_attendance_summary']); 
         Route::get('/get_sales_summary',[SummaryController::class,'get_sales_summary']);
@@ -80,9 +77,7 @@ Route::group(['middleware'=>['auth:sanctum']],function(){
 });
 // AUTHENTICATION
 Route::post('/auth/signin',[AuthController::class,'signin']);
-Route::get('/get_top_gymmer_of_the_month/{month}/{year}',[AccountController::class,'get_top_gymmer_of_the_month']);
 
-Route::get('/get_top_gymmer_of_current_month',[AccountController::class,'get_top_gymmer_of_current_month']);
 
 
 

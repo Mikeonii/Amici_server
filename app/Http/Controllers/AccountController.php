@@ -80,7 +80,7 @@ class AccountController extends Controller
     // $topAttendees will contain the top 5 users with the most attendances
     
     }
-    public function get_top_gymmer_of_current_month() {
+    public function get_top_gymmer_of_the_month($month,$year) {
         $currentMonth = Carbon::now()->month; // Get current month
         // $currentMonth = 10;
         $currentYear = Carbon::now()->year; // Get current year
