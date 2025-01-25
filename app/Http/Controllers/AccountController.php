@@ -138,7 +138,9 @@ class AccountController extends Controller
         $new->gender = $request->input('gender');
         $new->card_no = $request->input('card_no');
         $new->address = strtoupper($request->input('address'));
-        if($request->isMethod('put')) $new->expiry_date = $dateToday;
+
+
+        // if($request->isMethod('put')) $new->expiry_date = $dateToday;
         $new->phone_number = $request->phone_number;
         $new->yearly_expiry_date = Carbon::now()->addYears(1);
         $new->total_gym_time =0;

@@ -27,7 +27,7 @@ class SummaryController extends Controller
     public function get_sales_summary(){
         $months = collect(["January","Febuary","March","April","May","June","July","August","September","October","November","December"]);
         $year = date('Y');
-        $summary = collect([[ "Year","Sales"]]);   
+        $summary = collect([[ "Month","Sales"]]);   
 
         foreach($months as $index=>$month){
             $index+=1;
@@ -38,7 +38,7 @@ class SummaryController extends Controller
 
             $sum = collect([
                 $month,
-                $sales
+                intval($sales)
             ]);
             $summary->push($sum);
         }
