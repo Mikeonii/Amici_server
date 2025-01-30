@@ -11,6 +11,7 @@ use App\Http\Controllers\MeasurementController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\SummaryController;
 use App\Http\Controllers\SessionController;
+use App\Http\Controllers\UploadController;
 
 /*
 |--------------------------------------------------------------------------
@@ -73,11 +74,14 @@ Route::group(['middleware'=>['auth:sanctum']],function(){
         // SESSION
         Route::get('/sessions',[SessionController::class,'index']);
         Route::post('/session',[SessionController::class,'store']);
+
+       
         
 });
 // AUTHENTICATION
 Route::post('/auth/signin',[AuthController::class,'signin']);
 
+Route::post('upload_file',[UploadController::class,'uploadProfilePicture']);
 
 
 

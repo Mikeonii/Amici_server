@@ -8,10 +8,12 @@ use Exception;
 use Carbon\Carbon;
 class SessionController extends Controller
 {
-    public function index(){
-        $session = Session::get();
-        return $session;
+    public function index() {
+        // Get sessions and order by 'id' in descending order
+        $sessions = Session::orderBy('id', 'DESC')->get();
+        return $sessions;
     }
+    
     public function store(Request $request){
         $new = $request->isMethod('put') ? Session::findOrFail($request->id) : new Session;
         $new->customer_name = $request->customer_name;
