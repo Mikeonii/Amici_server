@@ -51,14 +51,13 @@ class ItemTransactionController extends Controller
         $new->item_id = $request->id;
         $new->amount = $request->total_amount;
         $new->quantity = $request->quantity;
-        $today = Carbon::now();
         try{
             $new->save();
             // if this is monthly renewal for normal and student members,
             if($request->id == 2 || $request->id == 3){
                 $acc = Account::findOrFail($request->account_id);
                 $expiry_date = Carbon::parse($acc->expiry_date);
-                $expiry_date = $today->addMonth($request->quantity)->format('Y-m-d');
+                $expiry_date = $expiry_date->addMonth($request->quantity)->format('Y-m-d');
                 $acc->expiry_date = $expiry_date;
                 $acc->save();
                 return $acc->load('item_transactions');
@@ -67,7 +66,7 @@ class ItemTransactionController extends Controller
             else if($request->id == 1){
                 $acc = Account::findOrFail($request->account_id);
                 $yearly_expiry_date = Carbon::parse($acc->yearly_expiry_date);
-                $yearly_expiry_date = $today->addYear($request->quantity)->format('Y-m-d');
+                $yearly_expiry_date = $yearly_expiry_date->addYear($request->quantity)->format('Y-m-d');
                 $acc->yearly_expiry_date = $yearly_expiry_date;
                 $acc->save();
                 return $acc->load('item_transactions');

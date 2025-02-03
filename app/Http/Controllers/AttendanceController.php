@@ -106,7 +106,7 @@ class AttendanceController extends Controller
         // if exists and there's no log out,
         else if($att->logged_out == "N/A"){
             $att = $this->insert_logged_out($att,$timeToday);
-            return collect([$att,"Thank you for choosing JC Fitness Gym. Hope you had a good time!"]);
+            return collect([$att,"Thank you for coming in"]);
         }
          // Check if attendance already exists in rows.
         else if($att->logged_in && $att->logged_out){
