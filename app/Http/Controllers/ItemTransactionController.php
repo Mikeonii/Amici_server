@@ -51,21 +51,32 @@ class ItemTransactionController extends Controller
         $new->item_id = $request->id;
         $new->amount = $request->total_amount;
         $new->quantity = $request->quantity;
+
+        $yearlyMembershipId = 1;
+        $monthlyRenewalRegularId = 2;
+        $monthlyRenewalStudentId = 3;
+      
         try{
             $new->save();
             // if this is monthly renewal for normal and student members,
-            if($request->id == 2 || $request->id == 3){
+            if($request->id == $monthlyRenewalRegularId || $request->id == $monthlyRenewalStudentId){
                 $acc = Account::findOrFail($request->account_id);
-                $expiry_date = Carbon::parse($acc->expiry_date);
+                
+                if($request->method == 'renew') $expiry_date = Carbon::now();
+                if($request->method == 'continue') $expiry_date = Carbon::parse($acc->expiry_date); // this is based on the last monthly expiry date
+                
                 $expiry_date = $expiry_date->addMonth($request->quantity)->format('Y-m-d');
                 $acc->expiry_date = $expiry_date;
                 $acc->save();
                 return $acc->load('item_transactions');
             }
             // for yearly membership
-            else if($request->id == 1){
+            else if($request->id == $yearlyMembershipId){
                 $acc = Account::findOrFail($request->account_id);
-                $yearly_expiry_date = Carbon::parse($acc->yearly_expiry_date);
+
+                if($request->method == 'renew') $yearly_expiry_date = Carbon::now(); //if renew then start to this date
+                if($request->method == 'continue') $yearly_expiry_date = Carbon::parse($acc->yearly_expiry_date); //if continue, start from the last date
+
                 $yearly_expiry_date = $yearly_expiry_date->addYear($request->quantity)->format('Y-m-d');
                 $acc->yearly_expiry_date = $yearly_expiry_date;
                 $acc->save();
@@ -77,7 +88,7 @@ class ItemTransactionController extends Controller
                 'amount' => $request['total_amount'],
             ];
             // insert new credit transaction
-            CreditTransactionController::store(new Request($creditData));
+            // CreditTransactionController::store(new Request($creditData));
         }
         catch(Exception $e)
         {
