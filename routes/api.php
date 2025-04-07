@@ -1,5 +1,4 @@
 <?php
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
@@ -12,7 +11,6 @@ use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\SummaryController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\UploadController;
-
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -23,7 +21,6 @@ use App\Http\Controllers\UploadController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
@@ -82,7 +79,7 @@ Route::group(['middleware'=>['auth:sanctum']],function(){
 Route::post('/auth/signin',[AuthController::class,'signin']);
 
 Route::post('upload_file',[UploadController::class,'uploadProfilePicture']);
-
+Route::get('expiredMembers/{month}/{year}',[AccountController::class,'expiredMembers']);
 
 
 

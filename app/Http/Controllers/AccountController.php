@@ -9,6 +9,12 @@ use App\Models\Attendance;
 use Carbon\Carbon;
 class AccountController extends Controller
 {   
+    public function expiredMembers($month,$year){
+        $expiredAccounts = Account::whereMonth('expiry_date',$month)
+        ->whereYear('expiry_date',$year)
+        ->get();
+        return $expiredAccounts;
+    }
     public function adjustDate($date, $operation, $intervalType, $count) {
         switch ($intervalType) {
             case 'Days':
