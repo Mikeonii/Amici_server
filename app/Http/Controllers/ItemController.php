@@ -41,6 +41,7 @@ class ItemController extends Controller
         $new->selling_price = $request->input('selling_price');
         $new->stocks = $request->input('stocks');
         $new->unit = $request->input('unit');
+        $new->item_type = $request->input('item_type');
         try{
             $new->save();
             return $new;
@@ -90,8 +91,9 @@ class ItemController extends Controller
      * @param  \App\Models\Item  $item
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Item $item)
+    public function destroy(Item $id)
     {
-        //
+        Item::findOrFail($id->id)->delete();
+        return true;
     }
 }

@@ -14,6 +14,14 @@ class SessionController extends Controller
         return $sessions;
     }
     
+    public function getByDate($month,$year){
+        $sessions = Session::whereMonth('date_inserted',$month)
+        ->whereYear('date_inserted',$year)
+        ->orderBy('date_inserted','DESC')
+        ->get();
+        return $sessions;
+    }
+    
     public function store(Request $request){
         $new = $request->isMethod('put') ? Session::findOrFail($request->id) : new Session;
         $new->customer_name = $request->customer_name;
@@ -21,6 +29,7 @@ class SessionController extends Controller
         $new->address = $request->address;
         $new->amount_paid = $request->amount_paid;
         $new->date_inserted = Carbon::now()->format("Y-m-d H:i:s");
+        $new->age = $request->age;
         try{
             $new->save();
             return $new;

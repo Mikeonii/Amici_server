@@ -46,6 +46,8 @@ Route::group(['middleware'=>['auth:sanctum']],function(){
         Route::post('/item',[ItemController::class,'store']);
         Route::put('/item',[ItemController::class,'store']);
         Route::get('/get_yearly_sales',[ItemTransactionController::class,'get_yearly_sales']);
+        Route::delete('/item/{id}',[ItemController::class,'destroy']);
+        
 
         // ITEM TRANSACTION
         Route::get('/item_transactions/{account_id}',[ItemTransactionController::class,'show']);
@@ -70,6 +72,7 @@ Route::group(['middleware'=>['auth:sanctum']],function(){
        
         // SESSION
         Route::get('/sessions',[SessionController::class,'index']);
+        Route::get('/sessions/byDate/{month}/{year}',[SessionController::class,'getByDate']);
         Route::post('/session',[SessionController::class,'store']);
 
        

@@ -144,6 +144,7 @@ class AccountController extends Controller
         $new->gender = $request->input('gender');
         $new->card_no = $request->input('card_no');
         $new->address = strtoupper($request->input('address'));
+        $new->age = $request->age;
 
 
         // if($request->isMethod('put')) $new->expiry_date = $dateToday;
@@ -231,19 +232,19 @@ class AccountController extends Controller
     public static function update_rank($account_id, $no_of_attendances){
         $rank = "";
         switch (true) {
-            case ($no_of_attendances >= 60):
+            case ($no_of_attendances >= 30):
                 $rank = "Lifter";
                 break;
-            case ($no_of_attendances >= 90):
+            case ($no_of_attendances >= 60):
                 $rank = "Veteran";
                 break;
-            case ($no_of_attendances >= 150):
+            case ($no_of_attendances >= 90):
                 $rank = "Master";
                 break;
-            case ($no_of_attendances >= 250):
+            case ($no_of_attendances >= 150):
                 $rank = "Legendary";
                 break;
-            case ($no_of_attendances >= 365):
+            case ($no_of_attendances >= 250):
                 $rank = "Beast";
                 break;
             default:

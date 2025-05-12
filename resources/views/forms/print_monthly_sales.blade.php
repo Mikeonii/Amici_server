@@ -31,7 +31,14 @@
                         @else 
                         <td style="color:red">Account Deleted</td>
                         @endif
+
+                        @if($sale->item)
                         <td>{{$sale->item->item_name}}</td>
+
+                        @else
+                        <td style=color:red>Item Deleted</td>
+                        @endif
+
                         <td>{{$sale->amount}}</td>
                         <td>{{$sale->created_at}}</td>
                     </tr>
