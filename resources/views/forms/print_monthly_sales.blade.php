@@ -8,10 +8,11 @@
     <title>Document</title>
 </head>
 <body>
-    <div class="container">
+    <div class="">
 
-        <h1 class=mb-4>Sales Report: {{$date}}</h1>
-        <h3>Monthly Subscriptions and Item Sales</h3>
+        <h1 class="mb-8 mt-4" style='margin-bottom:30px'>Monthly Sales Report: {{$date}}</h1>
+        <hr>
+        <h3>Monthly Subscriptions</h3>
         <table class="table table-striped table-sm">
             <thead>
                 <tr>
@@ -19,7 +20,10 @@
                     <th>Account Name</th>
                     <th>Transaction</th>
                     <th>Amount</th>
+                    <th>Payment Method</th>
                     <th>Date</th>
+                    <th>Posted By</th>
+
                 </tr>
             </thead>
             <tbody>
@@ -40,12 +44,20 @@
                         @endif
 
                         <td>{{$sale->amount}}</td>
+                        <td>{{$sale->payment_method}}</td>
                         <td>{{$sale->created_at}}</td>
+                        <td>{{$sale->posted_by}}
+                        </td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
-       
+
+        <p>Total Gcash: {{number_format($sales->where('payment_method', '=', 'Gcash')->sum('amount')) }}</p>
+        <p>Total Cash: {{number_format($sales->where('payment_method', '=', 'Cash')->sum('amount')) }}</p>
+        <h4 class=>Total: <span style="font-weight: bold; color:green">{{number_format($sales->sum('amount'))}}</span></h4>
+        <br>
+        <br>
         <h3>Walk-in Sessions</h3>
         <table class="table table-striped table-sm">
             <thead>
@@ -54,7 +66,9 @@
                     <th>Customer Name</th>
                     <th>Transaction</th>
                     <th>Amount</th>
+                    <th>Payment Method</th>
                     <th>Date</th>
+                    <th>Posted By</th>
                 </tr>
             </thead>
             <tbody>
@@ -64,16 +78,56 @@
                         <td>{{$sale->customer_name}}</td>
                         <td>Walk-in Session</td>
                         <td>{{$sale->amount_paid}}</td>
+                        <td>{{$sale->payment_method}}</td>
                         <td>{{$sale->created_at}}</td>
+                        <td>{{$sale->posted_by}}
+                        </td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
-        <h4 class=mt-5>Total Monthly Subscribers Collection: <span style="font-weight: bold; color:green">{{number_format($sales->sum('amount'))}}</span></h4>
+  
+        <p>Total Gcash: {{number_format($walk_in_sales->where('payment_method', '=', 'Gcash')->sum('amount_paid')) }}</p>
+        <p>Total Cash: {{number_format($walk_in_sales->where('payment_method', '=', 'Cash')->sum('amount_paid')) }}</p>
+        <h4>Total: <span style="font-weight: bold; color:green; margin-top:-20px">{{number_format($walk_in_sales->sum('amount_paid'))}}</span></h4>
+        <br>
+        <br>
+        <h3>Expenses</h3>
+         <table class="table table-striped table-sm">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Particulars</th>
+                    <th>Amount</th>
+                    <th>Category</th>
+                    <th>Date</th>
+                    <th>Posted by</th>
+                </tr>
+            </thead>
+               <tbody>
+                @foreach($expenses as $key => $expense)
+                    <tr>
+                        <td>{{ $loop->iteration }}</td> 
+                        <td>{{$expense->particulars}}</td>
+                        <td>{{$expense->amount}}</td>
+        
+                        <td>{{$expense->category}}</td>
+                        <td>{{$sale->created_at}}</td>
+                        <td>{{$sale->posted_by}}
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+            
+         </table>
+        <h4>Total: <span style="font-weight: bold; color:red; margin-top:-20px">{{number_format($expenses->sum('amount'))}}</span></h4>
 
-        <h4>Total Walk-in Sessions Collection: <span style="font-weight: bold; color:green; margin-top:-20px">{{number_format($walk_in_sales->sum('amount_paid'))}}</span></h4>
+     
         <hr>
-        <h3>Total Collection: <strong>{{number_format($walk_in_sales->sum('amount_paid')+$sales->sum('amount')) }}</strong></h3>
+        <h4>Total Net: <strong>{{number_format($walk_in_sales->sum('amount_paid')+$sales->sum('amount')) }}</strong></h4>
+        <h4>Less Expenses: <strong>{{number_format($expenses->sum('amount')) }}</strong></h4>
+        <hr>
+        <h3 style='color:blue'>Gross: <strong>{{number_format(($walk_in_sales->sum('amount_paid')+$sales->sum('amount'))-$expenses->sum('amount')) }}</strong></h3>
     </div>
 </body>
 </html>

@@ -19,4 +19,5 @@ Route::get('/', function () {
     return view('welcome');
 });
 Route::get('/print_monthly_sales/{selectedMonth}/{selectedYear}',[SummaryController::class,'print_monthly_sales']);
+Route::get('/print_daily_sales/{selectedDay}/{selectedMonth}/{selectedYear}',[SummaryController::class,'print_daily_sales']);
 Route::get('/print_waiver_form/{account_id}',[AccountController::class,'print_waiver_form']);

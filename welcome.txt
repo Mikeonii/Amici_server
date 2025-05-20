@@ -1,0 +1,1 @@
+This is an app for a fitness gym. This includes attendance monitoring, profiling ranking, basic sales and accounting. for more information, please contact: JMBComputers Proprietor Mr. Jan Michael Besinga or email at: janmichaelbesinga873@gmail.com

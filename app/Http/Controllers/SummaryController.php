@@ -6,10 +6,29 @@ use Illuminate\Http\Request;
 use App\Models\Attendance;
 use App\Models\ItemTransaction;
 use App\Models\Session;
+use App\Models\Expense;
 use Carbon\Carbon;
 
 class SummaryController extends Controller
 {   
+       public function print_daily_sales($day,$month,$year){
+        $day = str_pad($day, 2, '0', STR_PAD_LEFT);
+        // Ensure the month has 2 digits (e.g., 09 instead of 9)
+        $month = str_pad($month, 2, '0', STR_PAD_LEFT);
+        // Create the date with 'm-Y' format
+        $date = Carbon::createFromFormat('m-d-Y', $month . '-'. $day.'-' . $year);
+        // return $date;
+        $sales = ItemTransaction::whereDate('created_at',$date)->with('account')->with('item')->get();
+        $walk_in_sales = Session::whereDate('created_at',$date)->get();
+        $expenses = Expense::whereDate('created_at',$date)->get();
+        
+        return view('/forms/print_daily_sales')
+        ->with('sales',$sales)
+        ->with('date',$date)
+        ->with('walk_in_sales',$walk_in_sales)
+        ->with('expenses',$expenses);
+    }
+
     public function print_monthly_sales($month,$year){
 
         // Ensure the month has 2 digits (e.g., 09 instead of 9)
@@ -20,8 +39,12 @@ class SummaryController extends Controller
         ->with('account')->with('item')->get();
 
         $walk_in_sales = Session::whereMonth('created_at',$month)->whereYear('created_at',$year)->get();
-        
-        return view('/forms/print_monthly_sales')->with('sales',$sales)->with('date',$date)->with('walk_in_sales',$walk_in_sales);
+        $expenses = Expense::whereDate('created_at',$date)->get();
+        return view('/forms/print_monthly_sales')
+        ->with('sales',$sales)
+        ->with('date',$date)
+        ->with('walk_in_sales',$walk_in_sales)
+        ->with('expenses',$expenses);
     }
 
     public function get_sales_summary(){

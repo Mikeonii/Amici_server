@@ -11,6 +11,8 @@ use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\SummaryController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\UploadController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\ExpenseController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -53,7 +55,9 @@ Route::group(['middleware'=>['auth:sanctum']],function(){
         Route::get('/item_transactions/{account_id}',[ItemTransactionController::class,'show']);
         Route::post('/item_transaction',[ItemTransactionController::class,'store']);
         Route::get('/get_all_item_transactions',[ItemTransactionController::class,'get_all_item_transactions']);
-        
+        Route::get('/item_transactions',[ItemTransactionController::class,'index']);
+        Route::delete('/item_transaction/{id}',[ItemTransactionController::class,'destroy']);
+
         // BODY MEASUREMENT
         Route::get('/measurements/{account_id}',[MeasurementController::class,'show']);
         Route::post('/measurement',[MeasurementController::class,'store']);
@@ -74,8 +78,19 @@ Route::group(['middleware'=>['auth:sanctum']],function(){
         Route::get('/sessions',[SessionController::class,'index']);
         Route::get('/sessions/byDate/{month}/{year}',[SessionController::class,'getByDate']);
         Route::post('/session',[SessionController::class,'store']);
+        Route::delete('/session/{id}',[SessionController::class,'destroy']);
 
-       
+
+        //USER
+        Route::post('/user',[UserController::class,'store']);
+        Route::get('/users',[UserController::class,'index']);
+        Route::delete('/user/{id}',[UserController::class,'destroy']);
+
+        //EXPENSES
+        Route::post('/expense',[ExpenseController::class,'store']);
+        Route::get('/expenses',[ExpenseController::class,'index']);
+        Route::delete('/expense/{id}',[ExpenseController::class,'destroy']);
+
         
 });
 // AUTHENTICATION

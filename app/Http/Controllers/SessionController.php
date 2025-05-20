@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\models\Session;
 use Exception;
 use Carbon\Carbon;
+use Auth;
+
 class SessionController extends Controller
 {
     public function index() {
@@ -23,6 +25,7 @@ class SessionController extends Controller
     }
     
     public function store(Request $request){
+        $userName = auth()->user()->name;
         $new = $request->isMethod('put') ? Session::findOrFail($request->id) : new Session;
         $new->customer_name = $request->customer_name;
         $new->customer_gender = $request->customer_gender;
@@ -30,6 +33,8 @@ class SessionController extends Controller
         $new->amount_paid = $request->amount_paid;
         $new->date_inserted = Carbon::now()->format("Y-m-d H:i:s");
         $new->age = $request->age;
+        $new->payment_method = $request->payment_method;
+        $new->posted_by = $userName;
         try{
             $new->save();
             return $new;
@@ -38,4 +43,10 @@ class SessionController extends Controller
             return $e->getMessage();
         }
     }
+
+    public function destroy($id){
+        Session::findOrFail($id)->delete();
+        return true;
+    }
+    
 }
