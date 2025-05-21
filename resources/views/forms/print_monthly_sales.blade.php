@@ -112,8 +112,8 @@
                         <td>{{$expense->amount}}</td>
         
                         <td>{{$expense->category}}</td>
-                        <td>{{$sale->created_at}}</td>
-                        <td>{{$sale->posted_by}}
+                        <td>{{$expense->created_at}}</td>
+                        <td>{{$expense->posted_by}}
                         </td>
                     </tr>
                 @endforeach

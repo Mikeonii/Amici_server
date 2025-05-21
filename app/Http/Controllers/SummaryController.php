@@ -21,6 +21,8 @@ class SummaryController extends Controller
         $sales = ItemTransaction::whereDate('created_at',$date)->with('account')->with('item')->get();
         $walk_in_sales = Session::whereDate('created_at',$date)->get();
         $expenses = Expense::whereDate('created_at',$date)->get();
+        //  $expenses = Expense::all();
+        // return $expenses;
         
         return view('/forms/print_daily_sales')
         ->with('sales',$sales)
@@ -39,7 +41,8 @@ class SummaryController extends Controller
         ->with('account')->with('item')->get();
 
         $walk_in_sales = Session::whereMonth('created_at',$month)->whereYear('created_at',$year)->get();
-        $expenses = Expense::whereDate('created_at',$date)->get();
+        $expenses = Expense::whereMonth('created_at',$month)->whereYear('created_at',$year)->get();
+        // return $expenses;
         return view('/forms/print_monthly_sales')
         ->with('sales',$sales)
         ->with('date',$date)
