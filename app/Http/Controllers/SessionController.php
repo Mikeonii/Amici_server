@@ -48,5 +48,9 @@ class SessionController extends Controller
         Session::findOrFail($id)->delete();
         return true;
     }
-    
+    public function search($customer_name){
+   
+       return Session::where('customer_name', 'LIKE', $customer_name . '%')->limit('10')->get();
+    }
+
 }

@@ -13,7 +13,7 @@ class ItemTransactionController extends Controller
 {   
 
     public function index(){
-        return ItemTransaction::with('account','item')->get();
+        return ItemTransaction::with('account','item')->orderBy('id','DESC')->get();
     }
     public function get_all_item_transactions(){
         $item_transactions = ItemTransaction::with('item','account')->orderBy('created_at','DESC')->get();
