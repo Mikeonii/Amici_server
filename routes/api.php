@@ -13,6 +13,7 @@ use App\Http\Controllers\SessionController;
 use App\Http\Controllers\UploadController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ExpenseController;
+use App\Http\Controllers\ItemSaleController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -54,6 +55,7 @@ Route::group(['middleware'=>['auth:sanctum']],function(){
         // ITEM TRANSACTION
         Route::get('/item_transactions/{account_id}',[ItemTransactionController::class,'show']);
         Route::post('/item_transaction',[ItemTransactionController::class,'store']);
+        Route::put('/item_transaction',[ItemTransactionController::class,'store']);
         Route::get('/get_all_item_transactions',[ItemTransactionController::class,'get_all_item_transactions']);
         Route::get('/item_transactions',[ItemTransactionController::class,'index']);
         Route::delete('/item_transaction/{id}',[ItemTransactionController::class,'destroy']);
@@ -92,7 +94,9 @@ Route::group(['middleware'=>['auth:sanctum']],function(){
         Route::get('/expenses',[ExpenseController::class,'index']);
         Route::delete('/expense/{id}',[ExpenseController::class,'destroy']);
 
-        
+        //ITEMSALE
+        Route::post('/item_sale',[ItemSaleController::class,'store']);
+        Route::get('/item_sales',[ItemSaleController::class,'index']);
 });
 // AUTHENTICATION
 Route::post('/auth/signin',[AuthController::class,'signin']);

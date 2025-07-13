@@ -36,6 +36,7 @@ return array(
     'App\\Models\\CreditTransaction' => $baseDir . '/app/Models/CreditTransaction.php',
     'App\\Models\\Expense' => $baseDir . '/app/Models/Expense.php',
     'App\\Models\\Item' => $baseDir . '/app/Models/Item.php',
+    'App\\Models\\ItemSale' => $baseDir . '/app/Models/ItemSale.php',
     'App\\Models\\ItemTransaction' => $baseDir . '/app/Models/ItemTransaction.php',
     'App\\Models\\Measurement' => $baseDir . '/app/Models/Measurement.php',
     'App\\Models\\Session' => $baseDir . '/app/Models/Session.php',

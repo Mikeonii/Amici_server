@@ -53,10 +53,11 @@ class ItemTransactionController extends Controller
     }
     public function store(Request $request){
         $userName = Auth()->user()->name;
-        $new = new ItemTransaction;
+        $new = $request->isMethod('put') ? ItemTransaction::findOrFail($request->id) : new ItemTransaction;
+
         $new->account_id = $request->account_id;
-        $new->item_id = $request->id;
-        $new->amount = $request->total_amount;
+        $new->item_id = $request->isMethod('put') ? $request->item_id : $request->id ;
+        $new->amount = $request->amount;
         $new->quantity = $request->quantity;
         $new->posted_by = $userName;
         $new->payment_method =$request->payment_method;
@@ -70,43 +71,40 @@ class ItemTransactionController extends Controller
       
         try{
             $new->save();
-            // if this is monthly renewal
-            if($request->id == $monthlyId || $request->id == $promoMonthlyId){
-             
+            //check if new or not
+            if($request->isMethod('post')){
+                // if this is monthly renewal
+                if($request->id == $monthlyId || $request->id == $promoMonthlyId){
                 
-                if($request->method == 'Renew') $expiry_date = Carbon::now();
-                if($request->method == 'Continue') $expiry_date = Carbon::parse($acc->expiry_date); // this is based on the last monthly expiry date
+                    if($request->method == 'Renew') $expiry_date = Carbon::now();
+                    if($request->method == 'Continue') $expiry_date = Carbon::parse($acc->expiry_date); // this is based on the last monthly expiry date
+                    
+                    $expiry_date = $expiry_date->addMonth($request->quantity)->format('Y-m-d');
+                    $acc->expiry_date = $expiry_date;
+                    $acc->save();
+                    return $acc->load('item_transactions');
+                }
+                // for yearly membership
+                else if($request->id == $yearlyId || $request->id == $promoYearlyId){
                 
-                $expiry_date = $expiry_date->addMonth($request->quantity)->format('Y-m-d');
-                $acc->expiry_date = $expiry_date;
-                $acc->save();
-                return $acc->load('item_transactions');
-            }
-            // for yearly membership
-            else if($request->id == $yearlyId || $request->id == $promoYearlyId){
-              
+                    if($request->method == 'Renew') $yearly_expiry_date = Carbon::now(); //if renew then start to this date
+                    if($request->method == 'Continue') $yearly_expiry_date = Carbon::parse($acc->yearly_expiry_date); //if continue, start from the last date
 
-                if($request->method == 'Renew') $yearly_expiry_date = Carbon::now(); //if renew then start to this date
-                if($request->method == 'Continue') $yearly_expiry_date = Carbon::parse($acc->yearly_expiry_date); //if continue, start from the last date
-
-                $yearly_expiry_date = $yearly_expiry_date->addYear($request->quantity)->format('Y-m-d');
-                $acc->yearly_expiry_date = $yearly_expiry_date;
-                $acc->save();
-                return $acc->load('item_transactions');
+                    $yearly_expiry_date = $yearly_expiry_date->addYear($request->quantity)->format('Y-m-d');
+                    $acc->yearly_expiry_date = $yearly_expiry_date;
+                    $acc->save();
+                    return $acc->load('item_transactions');
+                }
+                else{
+                    $acc->save();
+                    return $acc->load('item_transactions');
+                }
             }
-            else{
-                $acc->save();
-                return $acc->load('item_transactions');
-            }
-          
         }
         catch(Exception $e)
         {
             return $e->getMessage();
         }
-   
-
-    
     }
 
     public function add_expiry_date($account_id,$quantity){

@@ -530,6 +530,7 @@ class ComposerStaticInit9be6d5f25657f3197250ff758b6e6c23
         'App\\Models\\CreditTransaction' => __DIR__ . '/../..' . '/app/Models/CreditTransaction.php',
         'App\\Models\\Expense' => __DIR__ . '/../..' . '/app/Models/Expense.php',
         'App\\Models\\Item' => __DIR__ . '/../..' . '/app/Models/Item.php',
+        'App\\Models\\ItemSale' => __DIR__ . '/../..' . '/app/Models/ItemSale.php',
         'App\\Models\\ItemTransaction' => __DIR__ . '/../..' . '/app/Models/ItemTransaction.php',
         'App\\Models\\Measurement' => __DIR__ . '/../..' . '/app/Models/Measurement.php',
         'App\\Models\\Session' => __DIR__ . '/../..' . '/app/Models/Session.php',
