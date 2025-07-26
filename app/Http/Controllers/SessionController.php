@@ -52,5 +52,22 @@ class SessionController extends Controller
    
        return Session::where('customer_name', 'LIKE', $customer_name . '%')->limit('10')->get();
     }
+    public function update(Request $request){
+        $session = Session::findOrFail($request->id);
+        $session->customer_name = $request->customer_name;
+        $session->customer_gender = $request->customer_gender;
+        $session->address = $request->address;
+        $session->amount_paid = $request->amount_paid;
+        $session->age = $request->age;
+        $session->payment_method = $request->payment_method;
+        try{
+            $session->save();
+            return $session;
+        }
+        catch(Exception $e){
+            return $e->getMessage();
+        }
+    }
+    
 
 }

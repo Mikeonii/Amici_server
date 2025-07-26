@@ -81,9 +81,9 @@ Route::group(['middleware'=>['auth:sanctum']],function(){
         Route::get('/sessions/byDate/{month}/{year}',[SessionController::class,'getByDate']);
         Route::post('/session',[SessionController::class,'store']);
         Route::delete('/session/{id}',[SessionController::class,'destroy']);
+        Route::put('/session',[SessionController::class,'update']);
         Route::get('/sessions/search/{customer_name}',[SessionController::class,'search']);
         
-
         //USER
         Route::post('/user',[UserController::class,'store']);
         Route::get('/users',[UserController::class,'index']);
