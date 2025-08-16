@@ -242,16 +242,16 @@ public function expiredMembers($month,$year){
     public static function update_rank($account_id, $no_of_attendances){
         $rank = "";
         switch (true) {
-            case ($no_of_attendances >= 30):
+            case ($no_of_attendances >= 30 && $no_of_attendances < 60):
                 $rank = "Lifter";
                 break;
-            case ($no_of_attendances >= 60):
+            case ($no_of_attendances >= 60 && $no_of_attendances < 90):
                 $rank = "Veteran";
                 break;
-            case ($no_of_attendances >= 90):
+            case ($no_of_attendances >= 90 && $no_of_attendances < 150):
                 $rank = "Master";
                 break;
-            case ($no_of_attendances >= 150):
+            case ($no_of_attendances >= 150 && $no_of_attendances < 250):
                 $rank = "Legendary";
                 break;
             case ($no_of_attendances >= 250):
