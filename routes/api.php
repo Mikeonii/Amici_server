@@ -27,12 +27,14 @@ use App\Http\Controllers\ItemSaleController;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+       Route::get('/account/{id}', [AccountController::class, 'show']);
 Route::post('/user',[AuthController::class,'store']);
 Route::group(['middleware'=>['auth:sanctum']],function(){
         Route::get('/auth/attempt',[AuthController::class,'attempt']);
         Route::post('/auth/signout',[AuthController::class,'signout']);
 
         // ACCOUNT
+ 
         Route::get('/accounts',[AccountController::class,'index']);
         Route::post('/account',[AccountController::class,'store']);
         Route::post('/upload_profile_picture',[AccountController::class,'upload_profile_picture']);

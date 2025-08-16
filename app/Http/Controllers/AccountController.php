@@ -9,11 +9,22 @@ use App\Models\Attendance;
 use Carbon\Carbon;
 class AccountController extends Controller
 {   
-    public function expiredMembers($month,$year){
-        $expiredAccounts = Account::whereMonth('expiry_date',$month)
-        ->whereYear('expiry_date',$year)
-        ->get();
-        return $expiredAccounts;
+
+public function show($id)
+{
+    $account = Account::find($id);
+    if ($account) {
+        return response()->json(['exists' => true, 'account' => $account]);
+    } else {
+        return response()->json(['exists' => false, 'message' => 'Account not found']);
+    }
+}
+
+public function expiredMembers($month,$year){
+    $expiredAccounts = Account::whereMonth('expiry_date',$month)
+    ->whereYear('expiry_date',$year)
+    ->get();
+    return $expiredAccounts;
     }
     public function adjustDate($date, $operation, $intervalType, $count) {
         switch ($intervalType) {
@@ -153,6 +164,8 @@ class AccountController extends Controller
         $new->total_gym_time =0;
         $new->total_attendance_rows = 0;
         $new->phone_number = $request->input('phone_number');
+        $new->expiry_date = Carbon::now()->format('Y-m-d');
+
         if($request->isMethod('post')){
             $new->total_gym_time = 0;
             $new->total_attendance_rows = 0;
@@ -173,10 +186,7 @@ class AccountController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
-        //
-    }
+   
 
     /**
      * Show the form for editing the specified resource.

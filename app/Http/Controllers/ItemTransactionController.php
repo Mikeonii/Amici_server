@@ -62,10 +62,11 @@ class ItemTransactionController extends Controller
         $new->posted_by = $userName;
         $new->payment_method =$request->payment_method;
 
-        $monthlyId = Item::where('item_type','Monthly Subscription')->value('id');
-        $yearlyId = Item::where('item_type','Membership')->value('id');
-        $promoMonthlyId = Item::where('item_type','Discounted Monthly Subscription')->value('id');
-        $promoYearlyId = Item::where('item_type','Discounted Membership')->value('id');
+
+ 
+        $item = Item::where('id',$request->id)->first();
+        $isMonthly = ($item->item_type == 'Monthly Subscription' || $item->item_type == 'Discounted Monthly Subscription');
+        $isYearly = ($item->item_type == 'Membership' || $item->item_type == 'Discounted Membership');
 
         $acc = Account::findOrFail($request->account_id);
       
@@ -74,8 +75,7 @@ class ItemTransactionController extends Controller
             //check if new or not
             if($request->isMethod('post')){
                 // if this is monthly renewal
-                if($request->id == $monthlyId || $request->id == $promoMonthlyId){
-                
+                if($isMonthly){
                     if($request->method == 'Renew') $expiry_date = Carbon::now();
                     if($request->method == 'Continue') $expiry_date = Carbon::parse($acc->expiry_date); // this is based on the last monthly expiry date
                     
@@ -85,8 +85,7 @@ class ItemTransactionController extends Controller
                     return $acc->load('item_transactions');
                 }
                 // for yearly membership
-                else if($request->id == $yearlyId || $request->id == $promoYearlyId){
-                
+                else if($isYearly){
                     if($request->method == 'Renew') $yearly_expiry_date = Carbon::now(); //if renew then start to this date
                     if($request->method == 'Continue') $yearly_expiry_date = Carbon::parse($acc->yearly_expiry_date); //if continue, start from the last date
 
