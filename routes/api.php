@@ -34,7 +34,7 @@ Route::group(['middleware'=>['auth:sanctum']],function(){
         Route::post('/auth/signout',[AuthController::class,'signout']);
 
         // ACCOUNT
- 
+        Route::post('/assign_rewards',[AccountController::class,'assign_rewards']);
         Route::get('/accounts',[AccountController::class,'index']);
         Route::post('/account',[AccountController::class,'store']);
         Route::post('/upload_profile_picture',[AccountController::class,'upload_profile_picture']);

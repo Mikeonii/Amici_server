@@ -19,6 +19,47 @@ public function show($id)
         return response()->json(['exists' => false, 'message' => 'Account not found']);
     }
 }
+public function assign_rewards(Request $request){
+    // 1. loop through each $request->selectedRankA 
+    // 2. get integer value $request->rankA;
+    // 3. foreach selectedRankA, add days based on $request->rankA;
+    $date = $request->month.', '.$request->year;
+    $rank1 = 1;
+    $rank2= 4;
+    $rank3= 7;
+    $messages = collect();
+    foreach($request->selectedRankA as $account ){
+        $acc = Account::findOrFail($account['id']);
+        $acc->expiry_date = Carbon::parse($acc->expiry_date)->addDays($request->rankA);
+        $acc->save();
+        $message = "Congratulations".' '.$acc->name.' for reaching Top '.$rank1.' for the month of '.$date.'. Your new monthly expiry date is at '.$acc->expiry_date.'. Continue grinding, Alpha!';
+        $messages->push($message);
+        $rank1++;
+    }
+
+    foreach($request->selectedRankB as $account){
+        $acc = Account::findOrFail($account['id']);
+        $acc->expiry_date = Carbon::parse($acc->expiry_date)->addDays($request->rankB);
+        $acc->save();
+        $message = "Congratulations".' '.$acc->name.' for reaching Top '.$rank2.' for the month of '.$date.'. Your new monthly expiry date is at '.$acc->expiry_date.'. Continue grinding, Alpha!';
+        $messages->push($message);
+        $rank2++;
+    }
+
+    foreach($request->selectedRankC as $account){
+        $acc = Account::findOrFail($account['id']);
+        $acc->expiry_date = Carbon::parse($acc->expiry_date)->addDays($request->rankC);
+        $acc->save();
+        $message = "Congratulations".' '.$acc->name.' for reaching Top '.$rank3.' for the month of '.$date.'. Your new monthly expiry date is at '.$acc->expiry_date.'. Continue grinding, Alpha!';
+        $messages->push($message);
+        $rank3++;
+        
+    }
+    return $messages;
+    return "Rewards assigned successfully";
+    
+}
+
 
 public function expiredMembers($month,$year){
     $expiredAccounts = Account::whereMonth('expiry_date',$month)
