@@ -8,6 +8,11 @@ use Carbon\Carbon;
 class Session extends Model
 {
     use HasFactory;
+
+    protected $casts = [
+        'amount_paid' => 'float',
+    ];
+
     public function getCreatedAtAttribute($value)
     {
         return Carbon::parse($value)->setTimezone(config('app.timezone'))->format('F j, Y g:i A');

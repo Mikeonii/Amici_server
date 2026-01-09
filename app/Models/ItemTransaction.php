@@ -9,6 +9,10 @@ class ItemTransaction extends Model
 {
     use HasFactory;
 
+    protected $casts = [
+        'amount' => 'float',
+    ];
+
     public function item(){
         return $this->belongsTo(Item::class);
     }
