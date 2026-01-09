@@ -16,6 +16,7 @@ return array(
     'App\\Http\\Controllers\\CreditTransactionController' => $baseDir . '/app/Http/Controllers/CreditTransactionController.php',
     'App\\Http\\Controllers\\ExpenseController' => $baseDir . '/app/Http/Controllers/ExpenseController.php',
     'App\\Http\\Controllers\\ItemController' => $baseDir . '/app/Http/Controllers/ItemController.php',
+    'App\\Http\\Controllers\\ItemSaleController' => $baseDir . '/app/Http/Controllers/ItemSaleController.php',
     'App\\Http\\Controllers\\ItemTransactionController' => $baseDir . '/app/Http/Controllers/ItemTransactionController.php',
     'App\\Http\\Controllers\\MeasurementController' => $baseDir . '/app/Http/Controllers/MeasurementController.php',
     'App\\Http\\Controllers\\SessionController' => $baseDir . '/app/Http/Controllers/SessionController.php',

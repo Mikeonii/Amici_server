@@ -32,7 +32,6 @@ class SummaryController extends Controller
     }
 
     public function print_monthly_sales($month,$year){
-
         // Ensure the month has 2 digits (e.g., 09 instead of 9)
         $month = str_pad($month, 2, '0', STR_PAD_LEFT);
         // Create the date with 'm-Y' format
